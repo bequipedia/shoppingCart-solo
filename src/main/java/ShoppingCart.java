@@ -4,7 +4,8 @@ public class ShoppingCart {
     private static final String HEADER = "---------------------------------------\n" +
             "|Product name|Price with VAT|Quantity| \n" +
             "|------------|--------------|--------|\n";
-    private static final String HORIZONTAL_SEPARATION = "|";
+    private static final String VERTICAL_SEPARATION = "|";
+    private static final String HORIZONTAL_SEPARATION = "\n-------------------------------------------";
     private final List<Product> listsOfProducts;
 
     public ShoppingCart(List<Product> listsOfProducts) {
@@ -47,7 +48,7 @@ public class ShoppingCart {
 //
 //
 
-        String listToString = listsOfProducts.toString().replace("[", "").replace("]", "");
-        return HEADER + HORIZONTAL_SEPARATION + listToString + HORIZONTAL_SEPARATION;
+        String listToString = listsOfProducts.toString().replace("[", "").replace("]", "").replace(",", "|").replace(" ", "");
+        return HEADER + VERTICAL_SEPARATION + listToString + VERTICAL_SEPARATION + HORIZONTAL_SEPARATION;
     }
 }

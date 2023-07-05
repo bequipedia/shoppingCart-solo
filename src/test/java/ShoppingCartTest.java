@@ -32,7 +32,7 @@ class ShoppingCartTest {
         ShoppingCart shoppingCart = new ShoppingCart(List.of(new Product("product1_id", "product1_name", 1.1)));
         String expectedOutput = "---------------------------------------\n" +
                 "|Product name|Price with VAT|Quantity| \n" +
-                "|------------|--------------|--------|\n" + "|product1_id, product1_name, 1.1|";
+                "|------------|--------------|--------|\n" + "|product1_id|product1_name|1.1|\n" + "-------------------------------------------";
 
         // act
         String actualOutput = shoppingCart.print();
