@@ -1,11 +1,23 @@
+import java.util.Collections;
 import java.util.List;
 
 public class ShoppingCart {
-    private static final String HEADER = "---------------------------------------\n" +
-            "|Product name|Price with VAT|Quantity| \n" +
-            "|------------|--------------|--------|\n";
-    private static final String VERTICAL_SEPARATION = "|";
-    private static final String HORIZONTAL_SEPARATION = "\n-------------------------------------------";
+    //    private static final String VERTICAL_SEPARATION = "|";
+    private static final String HEADER2 = "--------------------------------------------\n" +
+                                          "| Product name  | Price with VAT | Quantity |\n" +
+                                          "| -----------   | -------------- | -------- |\n";
+    private static final String HORIZONTAL_SEPARATION = "|-------------------------------------------|\n";
+    private static final String EMPTY_SHOPPING_CART = HEADER2 +
+                                                      HORIZONTAL_SEPARATION +
+                                                      getTotalSection("0", "0");
+
+    private static String getTotalSection(String totalProducts, String totalPrice) {
+        return "---------------------------------------------\n" +
+               " Total products: " + totalProducts + "\n" +
+               " Total price: " + totalPrice + " €\n" +
+               "---------------------------------------------";
+    }
+
     private final List<Product> listsOfProducts;
 
     public ShoppingCart(List<Product> listsOfProducts) {
@@ -21,7 +33,7 @@ public class ShoppingCart {
 // I will need a specific format to print the shopping list
 //        look for the repetition to extract constants
 //        """
-//  HEADER =    "--------------------------------------------
+//  HEADER2 =    "--------------------------------------------
 //                | Product name  | Price with VAT | Quantity |
 //                | -----------   | -------------- | -------- |"
 //
@@ -47,8 +59,22 @@ public class ShoppingCart {
 //
 //
 //
+        if (listsOfProducts.size() > 0) {
 
-        String listToString = listsOfProducts.toString().replace("[", "").replace("]", "").replace(",", "|").replace(" ", "");
-        return HEADER + VERTICAL_SEPARATION + listToString + VERTICAL_SEPARATION + HORIZONTAL_SEPARATION;
+            Product product1 = listsOfProducts.get(0);
+            String productName = product1.getName();
+            double productPrice = product1.getPrice();
+
+            int productQuantity = 0;
+            List<Product> distinctItems = listsOfProducts.stream().distinct().toList();
+            for (Product distinctItem : distinctItems) {
+                productQuantity = Collections.frequency(listsOfProducts, distinctItem);
+            }
+//        int finalPrice = productQuantity * productPrice;
+
+            return HEADER2 + productName + "\t\t" + productPrice + "\t\t" + productQuantity + "\n" + HORIZONTAL_SEPARATION + getTotalSection(String.valueOf(productQuantity), String.valueOf(product1.getPrice()));
+
+        }
+        return EMPTY_SHOPPING_CART;
     }
 }

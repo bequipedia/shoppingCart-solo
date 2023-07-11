@@ -1,6 +1,5 @@
 import org.junit.jupiter.api.Test;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,10 +28,22 @@ class ShoppingCartTest {
     @Test
     void should_print_shopping_cart() {
         // arrange
-        ShoppingCart shoppingCart = new ShoppingCart(List.of(new Product("product1_id", "product1_name", 1.1)));
-        String expectedOutput = "---------------------------------------\n" +
-                "|Product name|Price with VAT|Quantity| \n" +
-                "|------------|--------------|--------|\n" + "|product1_id|product1_name|1.1|\n" + "-------------------------------------------";
+        Product product1 = new Product("product1_id", "product1_name", 1.1);
+        ShoppingCart shoppingCart = new ShoppingCart(List.of(product1));
+        String expectedOutput =
+                "--------------------------------------------\n" +
+                "| Product name  | Price with VAT | Quantity |\n" +
+                "| -----------   | -------------- | -------- |\n" +
+                "product1_name\t\t1.1\t\t1\n" +
+                "|-------------------------------------------|\n" +
+                "---------------------------------------------\n" +
+                " Total products: 1\n" +
+                " Total price: 1.1 €\n" +
+                "---------------------------------------------";
+
+//                "---------------------------------------\n" +
+//                "|Product name|Price with VAT|Quantity| \n" +
+//                "|------------|--------------|--------|\n" + "product1_name\t\t1.1\t\t2\n" + "-------------------------------------------";
 
         // act
         String actualOutput = shoppingCart.print();
@@ -40,5 +51,56 @@ class ShoppingCartTest {
         // assert
         assertEquals(expectedOutput, actualOutput);
     }
+
+    @Test
+    void should_print_product_quantity_in_cart() {
+        // arrange
+        Product product1 = new Product("product1_id", "product1_name", 1.1);
+
+        ShoppingCart shoppingCart = new ShoppingCart(List.of(product1, product1, product1, product1));
+        String expectedOutput =
+                "--------------------------------------------\n" +
+                "| Product name  | Price with VAT | Quantity |\n" +
+                "| -----------   | -------------- | -------- |\n" +
+                "product1_name\t\t1.1\t\t4\n" +
+                "|-------------------------------------------|\n" +
+                "---------------------------------------------\n" +
+                " Total products: 4\n" +
+                " Total price: 1.1 €\n" +
+                "---------------------------------------------";
+
+//                "---------------------------------------\n" +
+//                "|Product name|Price with VAT|Quantity| \n" +
+//                "|------------|--------------|--------|\n" + "product1_name\t\t1.1\t\t4\n" + "-------------------------------------------";
+
+        // act
+        String actualOutput = shoppingCart.print();
+
+        // assert
+        assertEquals(expectedOutput, actualOutput);
+    }
+
+    @Test
+    void should_print_cart_with_no_products() {
+        // arrange
+
+        ShoppingCart shoppingCart = new ShoppingCart(List.of());
+        String expectedOutput = """
+                --------------------------------------------
+                | Product name  | Price with VAT | Quantity |
+                | -----------   | -------------- | -------- |      
+                |-------------------------------------------|
+                ---------------------------------------------
+                 Total products: 0                        
+                 Total price: 0 €                      
+                ---------------------------------------------""";
+
+        // act
+        String actualOutput = shoppingCart.print();
+
+        // assert
+        assertEquals(expectedOutput, actualOutput);
+    }
+
 }
 

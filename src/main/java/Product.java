@@ -15,4 +15,12 @@ public class Product {
     public String toString() {
         return id + ", " + name + ", " + price;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
 }

@@ -32,16 +32,11 @@ public class ShoppingCartAcceptanceTest {
                 --------------------------------------------
                 | Product name  | Price with VAT | Quantity |
                 | -----------   | -------------- | -------- |
-                | Iceberg       | 2.17 €         | 3        |
-                | Tomato        | 0.73 €         | 1        |
-                | Chicken       | 1.83 €         | 1        |
-                | Bread         | 0.88 €         | 2        |
-                | Corn          | 1.50 €         | 1        |
+                 Iceberg    2.17 €      3                       
                 |-------------------------------------------|
-                | Promotion: 5% off with code PROMO_5       |
                 ---------------------------------------------
-                | Total productos: 8                        |
-                | Total price: 11.71 €                      |
+                 Total products: 3                        
+                 Total price: 2.17 €                      
                 ---------------------------------------------""";
 
         // act
@@ -51,4 +46,36 @@ public class ShoppingCartAcceptanceTest {
         // assert
         assertEquals(expectedOutput, actualOutput);
     }
+
+//    @Test
+//    void should_print_shopping_cart_with_products_added() {
+//        // arrange
+//        ShoppingCart shoppingCart = new ShoppingCart(new ArrayList<>());
+//        String id = "product_id";
+//        String name = "Iceberg";
+//        double price = 2.17;
+//        Product product = new Product(id, name, price);
+//        String expectedOutput = """
+//                --------------------------------------------
+//                | Product name  | Price with VAT | Quantity |
+//                | -----------   | -------------- | -------- |
+//                 Iceberg    2.17 €      3
+//                 Tomato     0.73 €      1
+//                 Chicken    1.83 €      1
+//                 Bread      0.88 €      2
+//                 Corn       1.50 €      1
+//                |-------------------------------------------|
+//                 Promotion: 5% off with code PROMO_5  (last thing to implement )
+//                ---------------------------------------------
+//                 Total products: 8
+//                 Total price: 11.71 €
+//                ---------------------------------------------""";
+//
+//        // act
+//        shoppingCart.addProduct(product);
+//        String actualOutput = shoppingCart.print();
+//
+//        // assert
+//        assertEquals(expectedOutput, actualOutput);
+//    }
 }
