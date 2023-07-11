@@ -4,18 +4,18 @@ import java.util.List;
 public class ShoppingCart {
     //    private static final String VERTICAL_SEPARATION = "|";
     private static final String HEADER2 = "--------------------------------------------\n" +
-                                          "| Product name  | Price with VAT | Quantity |\n" +
-                                          "| -----------   | -------------- | -------- |\n";
+            "| Product name  | Price with VAT | Quantity |\n" +
+            "| -----------   | -------------- | -------- |\n";
     private static final String HORIZONTAL_SEPARATION = "|-------------------------------------------|\n";
     private static final String EMPTY_SHOPPING_CART = HEADER2 +
-                                                      HORIZONTAL_SEPARATION +
-                                                      getTotalSection("0", "0");
+            HORIZONTAL_SEPARATION +
+            getTotalSection("0", "0");
 
     private static String getTotalSection(String totalProducts, String totalPrice) {
         return "---------------------------------------------\n" +
-               " Total products: " + totalProducts + "\n" +
-               " Total price: " + totalPrice + " €\n" +
-               "---------------------------------------------";
+                " Total products: " + totalProducts + "\n" +
+                " Total price: " + totalPrice + " €\n" +
+                "---------------------------------------------";
     }
 
     private final List<Product> listsOfProducts;
@@ -72,7 +72,10 @@ public class ShoppingCart {
             }
 //        int finalPrice = productQuantity * productPrice;
 
-            return HEADER2 + productName + "\t\t" + productPrice + "\t\t" + productQuantity + "\n" + HORIZONTAL_SEPARATION + getTotalSection(String.valueOf(productQuantity), String.valueOf(product1.getPrice()));
+            String productInfoFormat = " " + productName + "\t\t" + productPrice + " €" + "\t\t" + productQuantity + "\n";
+            return HEADER2 + productInfoFormat +
+                    HORIZONTAL_SEPARATION +
+                    getTotalSection(String.valueOf(productQuantity), String.valueOf(product1.getPrice()));
 
         }
         return EMPTY_SHOPPING_CART;

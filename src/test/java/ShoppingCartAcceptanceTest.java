@@ -32,7 +32,7 @@ public class ShoppingCartAcceptanceTest {
                 --------------------------------------------
                 | Product name  | Price with VAT | Quantity |
                 | -----------   | -------------- | -------- |
-                 Iceberg    2.17 €      3                       
+                 Iceberg		2.17 €		3                       
                 |-------------------------------------------|
                 ---------------------------------------------
                  Total products: 3                        
@@ -40,6 +40,8 @@ public class ShoppingCartAcceptanceTest {
                 ---------------------------------------------""";
 
         // act
+        shoppingCart.addProduct(product);
+        shoppingCart.addProduct(product);
         shoppingCart.addProduct(product);
         String actualOutput = shoppingCart.print();
 
