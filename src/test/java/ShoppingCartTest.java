@@ -41,9 +41,6 @@ class ShoppingCartTest {
                 " Total price: 1.1 €\n" +
                 "---------------------------------------------";
 
-//                "---------------------------------------\n" +
-//                "|Product name|Price with VAT|Quantity| \n" +
-//                "|------------|--------------|--------|\n" + "product1_name\t\t1.1\t\t2\n" + "-------------------------------------------";
 
         // act
         String actualOutput = shoppingCart.print();
@@ -68,10 +65,6 @@ class ShoppingCartTest {
                 " Total products: 4\n" +
                 " Total price: 1.1 €\n" +
                 "---------------------------------------------";
-
-//                "---------------------------------------\n" +
-//                "|Product name|Price with VAT|Quantity| \n" +
-//                "|------------|--------------|--------|\n" + "product1_name\t\t1.1\t\t4\n" + "-------------------------------------------";
 
         // act
         String actualOutput = shoppingCart.print();
