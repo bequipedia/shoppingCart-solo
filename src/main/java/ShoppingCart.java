@@ -1,5 +1,6 @@
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,46 +22,47 @@ public class ShoppingCart {
     }
 
     private final List<Product> listsOfProducts;
+    private final List<BasketProduct> listsOfProductsWithQuantity = new ArrayList<>();
+
 
     public ShoppingCart(List<Product> listsOfProducts) {
 
         this.listsOfProducts = listsOfProducts;
     }
 
-    public void addProduct(Product product) {
-        listsOfProducts.add(product);
+    public void addProduct(BasketProduct product) {
+        listsOfProductsWithQuantity.add(product);
     }
 
     public String print() {
 
-        List<Product> distinctItems = getListOfProducts();
 
-        int productQuantity = getMyProductQuantity();
+        int productQuantity = getQuantityOfEachDistinctProduct();
 
-        if (listsOfProducts.size() == 4) {
+        if (listsOfProductsWithQuantity.size() == 4) {
 
-            Product product1 = listsOfProducts.get(0);
+            BasketProduct product1 = listsOfProductsWithQuantity.get(0);
 
-            int singleProductQuantity = getSingleProductQuantity(productQuantity, listsOfProducts);
+            int singleProductQuantity = getQuantityOfEachDistinctProduct();
 
-            List<Product> updatedListOfProducts = List.of(product1);
+            List<BasketProduct> updatedListOfProducts = List.of(product1);
 
             List<String> productsFormatted = getProductsFormatted(productQuantity, updatedListOfProducts);
 
             return HEADER2 +
                     getFinalListFormatted(productsFormatted) +
                     HORIZONTAL_SEPARATION +
-                    getTotalSection(product1, singleProductQuantity);
+                    getTotalSection(singleProductQuantity, product1);
         }
 
+        if (listsOfProductsWithQuantity.size() > 0) {
 
-        if (listsOfProducts.size() > 0) {
+            List<BasketProduct> distinctItems = getListOfDistinctProductsInBasket();
+            int totalProductQuantity = getTotalProductQuantity(distinctItems);
 
-            int totalProductQuantity = getTotalProductQuantity(distinctItems, 0);
+            List<String> productsFormatted = getProductsFormatted(productQuantity, listsOfProductsWithQuantity);
 
-            List<String> productsFormatted = getProductsFormatted(productQuantity, listsOfProducts);
-
-            String finalPriceFormatted = getFinalPriceFormatted(listsOfProducts);
+            String finalPriceFormatted = getFinalPriceFormatted(listsOfProductsWithQuantity);
 
             return HEADER2 + getFinalListFormatted(productsFormatted) +
                     HORIZONTAL_SEPARATION +
@@ -68,59 +70,67 @@ public class ShoppingCart {
         }
         return EMPTY_SHOPPING_CART;
     }
+//        final idea before giving up for the next two hours:
+//        a list that handles products with quantity instead of having multiple methods handling quantity
+//        this approach is more likely to use the things that I already have
 
-    public List<ProductWithQuantity> listOfProductsWithQuantity(List<Product> listsOfProducts) {
-        List<ProductWithQuantity> productsWithQuantityList = new ArrayList<>();
+//        another idea if this one doesn't work: create a map <Product, quantity> and iterate over a list of products and += the quantity and update the map value
+//        this approach changes the whole design completely and I'll need to adjust passing tests
 
+    public List<BasketProduct> getListOfProductsWithQuantity(List<Product> listsOfProducts) {
+        List<BasketProduct> productsWithQuantityList = new ArrayList<>();
         int quantity = 0;
         for (Product product : listsOfProducts) {
-            ProductWithQuantity productWithQuantity = new ProductWithQuantity(product.getId(), product.getName(), product.getPrice(), quantity);
+            BasketProduct productWithQuantity = new BasketProduct(product.getName(), product.getPrice(), quantity);
             productsWithQuantityList.add(productWithQuantity);
         }
-
         return productsWithQuantityList;
-
-
     }
-
-    private int getMyProductQuantity() {
+    private int getQuantityOfEachDistinctProduct() {
         int productQuantity = 0;
-        List<Product> distinctItems = getListOfProducts();
-        productQuantity = getSingleProductQuantity(productQuantity, distinctItems);
+        List<BasketProduct> distinctItems = getListOfDistinctProductsInBasket();
+        for (BasketProduct distinctItem : distinctItems) {
+            productQuantity = Collections.frequency(listsOfProductsWithQuantity, distinctItem);
+        }
         return productQuantity;
     }
 
-    private int getTotalProductQuantity(List<Product> distinctItems, int totalProductQuantity) {
-        for (Product distinctItem : distinctItems) {
-            totalProductQuantity += getSingleProductQuantity(distinctItem);
+    private List<BasketProduct> getListOfDistinctProductsInBasket() {
+        return listsOfProductsWithQuantity.stream().distinct().toList();
+    }
+
+//    private int getQuantityOfEachDistinctProduct() {
+//        int productQuantity = 0;
+//        List<Product> distinctItems = getListOfDistinctProductsInBasket();
+//        for (Product distinctItem : distinctItems) {
+//            productQuantity = Collections.frequency(listsOfProducts, distinctItem);
+//        }
+//        return productQuantity;
+//    }
+//
+//    private List<Product> getListOfDistinctProductsInBasket() {
+//        return listsOfProducts.stream().distinct().toList();
+//    }
+
+//    these two up here are coupled
+
+    private int getTotalProductQuantity(List<BasketProduct> distinctItems) {
+        int totalProductQuantity = 0;
+        for (BasketProduct distinctItem : distinctItems) {
+            totalProductQuantity += Collections.frequency(listsOfProducts, distinctItem);
         }
         return totalProductQuantity;
     }
 
-    private int getSingleProductQuantity(int productQuantity, List<Product> distinctItems) {
-        for (Product distinctItem : distinctItems) {
-            productQuantity = getSingleProductQuantity(distinctItem);
-        }
-        return productQuantity;
+    private String getTotalSection(int productQuantity, BasketProduct product) {
+        return getTotalSection(String.valueOf(productQuantity), String.valueOf(product.getProductPrice()));
     }
 
-    private int getSingleProductQuantity(Product distinctItem) {
-        return Collections.frequency(listsOfProducts, distinctItem);
-    }
-
-    private String getTotalSection(Product product, int productQuantity) {
-        return getTotalSection(String.valueOf(productQuantity), String.valueOf(product.getPrice()));
-    }
-
-    private List<Product> getListOfProducts() {
-        return listsOfProducts.stream().distinct().toList();
-    }
-
-    private List<String> getProductsFormatted(int productQuantity, List<Product> listsOfProducts) {
+    private List<String> getProductsFormatted(int productQuantity, List<BasketProduct> listsOfProducts) {
         List<String> myFinalListTrue = new ArrayList<>();
-        for (Product listsOfProduct : listsOfProducts) {
+        for (BasketProduct listsOfProduct : listsOfProducts) {
 
-            BasketProduct basketProduct = new BasketProduct(listsOfProduct.getName(), listsOfProduct.getPrice(), productQuantity);
+            BasketProduct basketProduct = new BasketProduct(listsOfProduct.getProductName(), listsOfProduct.getProductPrice(), productQuantity);
 
             String productInfoFormat = basketProduct.getString();
             myFinalListTrue.add(productInfoFormat);
@@ -128,10 +138,10 @@ public class ShoppingCart {
         return myFinalListTrue;
     }
 
-    private static String getFinalPriceFormatted(List<Product> products) {
+    private static String getFinalPriceFormatted(List<BasketProduct> products) {
         double finalPrice = 0;
-        for (Product product : products) {
-            finalPrice += product.getPrice();
+        for (BasketProduct product : products) {
+            finalPrice += product.getProductPrice();
         }
         DecimalFormat df = new DecimalFormat("#.#");
         return df.format(finalPrice);

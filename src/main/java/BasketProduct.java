@@ -2,6 +2,19 @@ public class BasketProduct {
 
 
     private String productName;
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public double getProductPrice() {
+        return productPrice;
+    }
+
+    public int getProductQuantity() {
+        return productQuantity;
+    }
+
     private double productPrice;
     private int productQuantity;
 

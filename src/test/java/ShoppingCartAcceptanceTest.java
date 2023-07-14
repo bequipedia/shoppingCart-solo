@@ -27,23 +27,23 @@ public class ShoppingCartAcceptanceTest {
         String id1 = "product_id1";
         String name1 = "Iceberg";
         double price1 = 2.17;
-        Product product1 = new Product(id1, name1, price1);
+        BasketProduct product1 = new BasketProduct(id1, name1, price1, );
         String id2 = "id2";
         String name2 = "Tomato";
         double price2 = 0.73;
-        Product product2 = new Product(id2, name2, price2);
+        BasketProduct product2 = new BasketProduct(id2, name2, price2);
         String id3 = "id3";
         String name3 = "Chicken";
         double price3 = 1.83;
-        Product product3 = new Product(id3, name3, price3);
+        BasketProduct product3 = new BasketProduct(id3, name3, price3);
         String id4 = "id4";
         String name4 = "Bread";
         double price4 = 0.88;
-        Product product4 = new Product(id4, name4, price4);
+        BasketProduct product4 = new BasketProduct(id4, name4, price4);
         String id5 = "id5";
         String name5 = "Corn";
         double price5 = 1.50;
-        Product product5 = new Product(id5, name5, price5);
+        BasketProduct product5 = new BasketProduct(id5, name5, price5);
         String expectedOutput = """
                 --------------------------------------------
                 | Product name  | Price with VAT | Quantity |
