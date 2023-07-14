@@ -26,7 +26,7 @@ class ShoppingCartTest {
     }
 
     @Test
-    void should_print_shopping_cart() {
+    void should_print_shopping_cart_with_single_item() {
         // arrange
         Product product1 = new Product("product1_id", "product1_name", 1.1);
         ShoppingCart shoppingCart = new ShoppingCart(List.of(product1));
@@ -87,6 +87,34 @@ class ShoppingCartTest {
                  Total products: 0                        
                  Total price: 0 €                      
                 ---------------------------------------------""";
+
+        // act
+        String actualOutput = shoppingCart.print();
+
+        // assert
+        assertEquals(expectedOutput, actualOutput);
+    }
+
+    @Test
+    void should_print_shopping_cart_with_multiple_items() {
+        // arrange
+        Product product1 = new Product("product1_id", "product1_name", 1.1);
+        Product product2 = new Product("product2_id", "product2_name", 1.2);
+        Product product3 = new Product("product3_id", "product3_name", 1.3);
+        ShoppingCart shoppingCart = new ShoppingCart(List.of(product1, product2, product3));
+        String expectedOutput =
+                "--------------------------------------------\n" +
+                        "| Product name  | Price with VAT | Quantity |\n" +
+                        "| -----------   | -------------- | -------- |\n" +
+                        " product1_name\t\t1.1 €\t\t1\n" +
+                        " product2_name\t\t1.2 €\t\t1\n" +
+                        " product3_name\t\t1.3 €\t\t1\n" +
+                        "|-------------------------------------------|\n" +
+                        "---------------------------------------------\n" +
+                        " Total products: 3\n" +
+                        " Total price: 3.6 €\n" +
+                        "---------------------------------------------";
+
 
         // act
         String actualOutput = shoppingCart.print();

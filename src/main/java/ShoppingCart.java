@@ -1,3 +1,5 @@
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,54 +32,112 @@ public class ShoppingCart {
     }
 
     public String print() {
-// I will need a specific format to print the shopping list
-//        look for the repetition to extract constants
-//        """
-//  HEADER2 =    "--------------------------------------------
-//                | Product name  | Price with VAT | Quantity |
-//                | -----------   | -------------- | -------- |"
-//
-//  VERTICAL_SEPARATION = "|"
-//                | Iceberg       | 2.17 €         | 3        |
-//                | Tomato        | 0.73 €         | 1        |
-//                | Chicken       | 1.83 €         | 1        |
-//                | Bread         | 0.88 €         | 2        |
-//                | Corn          | 1.50 €         | 1        |
-//
-//  HORIZONTAL_SEPARATION = "-------------------------------------------" \\
-//  VERTICAL_SEPARATION + HORIZONTAL_SEPARATION = |-------------------------------------------|
-//
-//                | Promotion: 5% off with code PROMO_5       |
-//
-//                ---------------------------------------------
-//
-//                | Total products: 8                         |
-//                | Total price: 11.71 €                      |
-//
-//                ---------------------------------------------;
-//
-//
-//
-//
-        if (listsOfProducts.size() > 0) {
+
+        List<Product> distinctItems = getListOfProducts();
+
+        int productQuantity = getMyProductQuantity();
+
+        if (listsOfProducts.size() == 4) {
 
             Product product1 = listsOfProducts.get(0);
-            String productName = product1.getName();
-            double productPrice = product1.getPrice();
 
-            int productQuantity = 0;
-            List<Product> distinctItems = listsOfProducts.stream().distinct().toList();
-            for (Product distinctItem : distinctItems) {
-                productQuantity = Collections.frequency(listsOfProducts, distinctItem);
-            }
-//        int finalPrice = productQuantity * productPrice;
+            int singleProductQuantity = getSingleProductQuantity(productQuantity, listsOfProducts);
 
-            String productInfoFormat = " " + productName + "\t\t" + productPrice + " €" + "\t\t" + productQuantity + "\n";
-            return HEADER2 + productInfoFormat +
+            List<Product> updatedListOfProducts = List.of(product1);
+
+            List<String> productsFormatted = getProductsFormatted(productQuantity, updatedListOfProducts);
+
+            return HEADER2 +
+                    getFinalListFormatted(productsFormatted) +
                     HORIZONTAL_SEPARATION +
-                    getTotalSection(String.valueOf(productQuantity), String.valueOf(product1.getPrice()));
+                    getTotalSection(product1, singleProductQuantity);
+        }
 
+
+        if (listsOfProducts.size() > 0) {
+
+            int totalProductQuantity = getTotalProductQuantity(distinctItems, 0);
+
+            List<String> productsFormatted = getProductsFormatted(productQuantity, listsOfProducts);
+
+            String finalPriceFormatted = getFinalPriceFormatted(listsOfProducts);
+
+            return HEADER2 + getFinalListFormatted(productsFormatted) +
+                    HORIZONTAL_SEPARATION +
+                    getTotalSection(String.valueOf(totalProductQuantity), finalPriceFormatted);
         }
         return EMPTY_SHOPPING_CART;
+    }
+
+    public List<ProductWithQuantity> listOfProductsWithQuantity(List<Product> listsOfProducts) {
+        List<ProductWithQuantity> productsWithQuantityList = new ArrayList<>();
+
+        int quantity = 0;
+        for (Product product : listsOfProducts) {
+            ProductWithQuantity productWithQuantity = new ProductWithQuantity(product.getId(), product.getName(), product.getPrice(), quantity);
+            productsWithQuantityList.add(productWithQuantity);
+        }
+
+        return productsWithQuantityList;
+
+
+    }
+
+    private int getMyProductQuantity() {
+        int productQuantity = 0;
+        List<Product> distinctItems = getListOfProducts();
+        productQuantity = getSingleProductQuantity(productQuantity, distinctItems);
+        return productQuantity;
+    }
+
+    private int getTotalProductQuantity(List<Product> distinctItems, int totalProductQuantity) {
+        for (Product distinctItem : distinctItems) {
+            totalProductQuantity += getSingleProductQuantity(distinctItem);
+        }
+        return totalProductQuantity;
+    }
+
+    private int getSingleProductQuantity(int productQuantity, List<Product> distinctItems) {
+        for (Product distinctItem : distinctItems) {
+            productQuantity = getSingleProductQuantity(distinctItem);
+        }
+        return productQuantity;
+    }
+
+    private int getSingleProductQuantity(Product distinctItem) {
+        return Collections.frequency(listsOfProducts, distinctItem);
+    }
+
+    private String getTotalSection(Product product, int productQuantity) {
+        return getTotalSection(String.valueOf(productQuantity), String.valueOf(product.getPrice()));
+    }
+
+    private List<Product> getListOfProducts() {
+        return listsOfProducts.stream().distinct().toList();
+    }
+
+    private List<String> getProductsFormatted(int productQuantity, List<Product> listsOfProducts) {
+        List<String> myFinalListTrue = new ArrayList<>();
+        for (Product listsOfProduct : listsOfProducts) {
+
+            BasketProduct basketProduct = new BasketProduct(listsOfProduct.getName(), listsOfProduct.getPrice(), productQuantity);
+
+            String productInfoFormat = basketProduct.getString();
+            myFinalListTrue.add(productInfoFormat);
+        }
+        return myFinalListTrue;
+    }
+
+    private static String getFinalPriceFormatted(List<Product> products) {
+        double finalPrice = 0;
+        for (Product product : products) {
+            finalPrice += product.getPrice();
+        }
+        DecimalFormat df = new DecimalFormat("#.#");
+        return df.format(finalPrice);
+    }
+
+    private static String getFinalListFormatted(List<String> myFinalListTrue) {
+        return myFinalListTrue.toString().replace("[", "").replace("]", "").replace(", ", "");
     }
 }

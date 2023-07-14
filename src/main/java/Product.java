@@ -1,6 +1,7 @@
 import java.util.Objects;
 
 public class Product {
+
     private final String id;
     private final String name;
     private final double price;
@@ -15,6 +16,9 @@ public class Product {
     public String toString() {
         return id + ", " + name + ", " + price;
     }
+    public String getId() {
+        return id;
+    }
 
     public String getName() {
         return name;
@@ -23,4 +27,5 @@ public class Product {
     public double getPrice() {
         return price;
     }
+
 }
